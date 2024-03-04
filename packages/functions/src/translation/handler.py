@@ -1,21 +1,7 @@
 from easynmt import EasyNMT
-import time
 import json
-import os
-import nltk 
 
-
-cache_folder_path = "/tmp/cache"
-os.environ["NLTK_DATA"] = cache_folder_path
-os.environ["EASYNMT_CACHE"] = cache_folder_path
-
-nltk.data.path.append("/tmp/nltk_data")
-nltk.download('punkt', download_dir="/tmp/nltk_data")
-
-def main(event):
-    print("Hello from translation handler!")
-
-
+def main(event, context):
     path_params = event.get("pathParameters", {})
     
     try:
@@ -37,17 +23,12 @@ def main(event):
         return
 
 
-    nmt = EasyNMT("opus-mt", cache_folder=cache_folder_path)
-
-    start = time.time()
+    nmt = EasyNMT("opus-mt")
 
     source_lang = nmt.language_detection(source_text)
 
-    translated_text = nmt.translate(source_text, target_lang=target_lang, source_lang=source_lang)
-    
-    end = time.time()
+    print(f"Translating from {source_lang} to {target_lang}")
 
-    print(f"Translating from {source_lang} to {target_lang} usign model opus-mt")
-    print(f"Took {end - start}s")
+    translated_text = nmt.translate(source_text, target_lang=target_lang, source_lang=source_lang)
 
     return {"result": translated_text}

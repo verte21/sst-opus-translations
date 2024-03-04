@@ -1,6 +1,5 @@
 uvicorn[standard]
 gunicorn
-fastapi
 nltk
 easynmt
 sacremoses
